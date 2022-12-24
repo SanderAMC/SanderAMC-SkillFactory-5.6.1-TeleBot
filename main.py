@@ -1,6 +1,5 @@
 import telebot
 from extensions import *
-import sys
 
 if __name__ == "__main__":
 
@@ -49,8 +48,8 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
                 raise TBUserExceptions("*Запрос не соответствует шаблону по числу параметров*\.")
 
             base, quote, amount = str_
-            tb.text_checking(base, quote, amount)
-            source, target = tb.normalize(base, quote)
+            TelebotCurrency.text_checking(base, quote, amount)
+            source, target = TelebotCurrency.normalize(base, quote)
 
             result, p_result, n_source, n_target = TelebotCurrency.get_price(source, target, amount)
 

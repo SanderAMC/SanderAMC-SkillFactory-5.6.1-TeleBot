@@ -4,11 +4,14 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
+
 class TBExceptions(Exception):
     pass
 
+
 class TBUserExceptions(TBExceptions):
     pass
+
 
 class TelebotCurrency():
 
@@ -21,7 +24,8 @@ class TelebotCurrency():
                 charset="utf-8",
                 decode_responses=True
             )
-#Ведение истории запросов пользователя
+
+# Ведение истории запросов пользователя
     @staticmethod
     def logging(logstring):
         print(logstring)
@@ -36,8 +40,9 @@ class TelebotCurrency():
         TelebotCurrency.logging(logstring)
         return round(float(amount) * a_rate, 4), round(float(amount) * p_rate, 4), n_source, n_target
 
-#Проверка корректности ввода пользователя, приведение введенных валют к имени валюты ЦБ
-    def text_checking(self, base: str, quote: str, amount: str) -> None:
+# Проверка корректности ввода пользователя, приведение введенных валют к имени валюты ЦБ
+    @staticmethod
+    def text_checking(base: str, quote: str, amount: str) -> None:
 
         if base.upper() == quote.upper():
             raise TBUserExceptions("*Исходная и целевая валюты совпадают*\.")
@@ -62,7 +67,8 @@ class TelebotCurrency():
         return
 
     # Проверка корректности ввода пользователя, приведение введенных валют к имени валюты ЦБ
-    def normalize(self, base: str, quote: str) -> tuple[str, str]:
+    @staticmethod
+    def normalize(base: str, quote: str) -> tuple[str, str]:
 
         source, target = "", ""
         if base.upper() in CURRENCY.keys():
