@@ -1,4 +1,9 @@
 TB_TOKEN = "5832194309:AAGGBEqi0qsYM_1LZ7zVVgSLis1OZS1l9HI"
+CURRENCY_BASE = 'https://www.cbr-xml-daily.ru/daily_json.js'
+
+RHOST = 'redis-10330.c250.eu-central-1-1.ec2.cloud.redislabs.com'
+RPORT = 10330
+RPASS = 'yqMyw4PTUdcFTreGjoWLGoweg6BAmrri'
 
 CURRENCY = {
     "AUD":"адоллар",
@@ -32,5 +37,6 @@ CURRENCY = {
     "CHF":"франк",
     "ZAR":"рэнд",
     "KRW":"вона",
-    "JPY":"иена"
+    "JPY":"иена",
+    "RUB":"рубль"
 }

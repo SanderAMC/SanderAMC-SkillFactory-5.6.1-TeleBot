@@ -1,21 +1,21 @@
 import telebot
 from extensions import *
+import sys
 
 if __name__ == "__main__":
+
     tb = TelebotCurrency()
     bot = telebot.TeleBot(tb.tb_token)
 
-
     @bot.message_handler(commands=['start'])
     def handle_start_help(message):
-#        print(message)
         str_ = f"Здравствуйте, *{message.chat.first_name}*\. \n\n"\
 "Я бот \- el convertore валют по текущему курсу\. \n\n Запросите: \n *\<исходная валюта\> \<целевая валюта\> \<сумма для обмена\>* \n" \
 "\nВалюту смотрю по ее коду или названию, мне не важно\. \n\n"\
 "/help для подробного списка команд\. \n\n"\
 "__P\.S\. Но вы можете попробовать прислать мне песню, видео, голосовое сообщение, свое местоположение, али стикер какой\.__"
         bot.send_message(message.chat.id, str_, parse_mode='MarkdownV2')
-#bot.send_message(message.chat.id, '__Нижнее подчёркивание\.__', parse_mode='MarkdownV2')
+
 
     @bot.message_handler(commands=['help'])
     def handle_start_help(message):
@@ -46,18 +46,35 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
             str_ = message.text.split(" ")
 
             if len(str_) != 3:
-                raise TBExceptions("*Запрос не соответствует шаблону по числу параметров*\.")
+                raise TBUserExceptions("*Запрос не соответствует шаблону по числу параметров*\.")
 
             base, quote, amount = str_
-
             source, target = tb.text_checking(base, quote, amount)
-            result = TelebotCurrency.get_price(source, target, amount)
+#            print(f"Запрашиваем {amount} {source} в {target}")
+            result, p_result, n_source, n_target = TelebotCurrency.get_price(source, target, amount)
+
+        except TBUserExceptions as e:
+            bot.send_message(message.chat.id, f"Вы ошиблись при вводе\.\n{e}", parse_mode='MarkdownV2')
         except TBExceptions as e:
-            bot.send_message(message.chat.id, f"Ошибка ввода пользователя\.\n{e}", parse_mode='MarkdownV2')
+            bot.send_message(message.chat.id, f"Ошибка обработки сервером\.\n{e}", parse_mode='MarkdownV2')
         except Exception as e:
-            bot.send_message(message.chat.id, f"Проблема с обработкой\. {e}", parse_mode='MarkdownV2')
+            bot.send_message(message.chat.id, f"Проблема с обработкой\.\n{e}", parse_mode='MarkdownV2')
         else:
-            bot.send_message(message.chat.id, f"Меняем шило на мыло. {source} {target} {result}")
+            amount_ = amount.replace(".", "\.")
+            result_ = str(result).replace(".", "\.")
+            p_result_ = str(p_result).replace(".", "\.")
+
+#            print(result, p_result)
+            if result == p_result:
+                str_ = f"\nКурс не изменялся, раньше получили\-бы столько\-же\."
+            elif result > p_result:
+                str_ = f"\n*Хороший курс, раньше был хуже\.*\nВы\-бы получили *{p_result_}*\."
+            else:
+                str_ = f"\n*Не выгодный курс, прежний был лучше\.*\nВы могли получить *{p_result_}*\."
+
+            str_ = f"При обмене *{amount_}* {n_source} на {n_target} вы получите *{result_}*\." + str_
+#            print(str_)
+            bot.send_message(message.chat.id, str_, parse_mode='MarkdownV2')
 
 
     @bot.message_handler(content_types=['audio', ])
@@ -100,25 +117,13 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
     bot.polling(none_stop=True)
 
 """
-1. Базовые эксепшены
-2. Базовый класс и методы
-3. Работа с файлом конфига
-4. Работа с БД Redis
+1. Работа с БД Redis
 5. Основная обработка: парсинг валют, пересчет
 6. Логирование действий и вывод лога для пользователя по отдельной команде
-
-sticker — стикер.
 
 
 Бот возвращает цену на определённое количество валюты (евро, доллар или рубль).
 Человек должен отправить сообщение боту в виде <имя валюты, цену которой он хочет узнать> <имя валюты, в которой надо узнать цену первой валюты> <количество первой валюты>.
 
-При ошибке пользователя (например, введена неправильная или несуществующая валюта или неправильно введено число) вызывать собственно написанное исключение APIException с текстом пояснения ошибки.
-Текст любой ошибки с указанием типа ошибки должен отправляться пользователю в сообщения.
-
-Для отправки запросов к API описать класс со статическим методом get_price(), который принимает три аргумента и возвращает нужную сумму в валюте:
-имя валюты, цену на которую надо узнать, — base;
-имя валюты, цену в которой надо узнать, — quote;
-количество переводимой валюты — amount.
 
 """
