@@ -82,7 +82,7 @@ class TelebotCurrency():
         except ValueError:
             raise TBUserExceptions("*Не удалось обработать количество*\.")
 
-        if float(amount) > 10000000:
+        if float(amount) > 1000000000:
             raise TBUserExceptions("*С такой суммой я вам не помогу, большая очень*\.")
 
         if float(amount) <= 0:
