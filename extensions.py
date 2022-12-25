@@ -90,7 +90,7 @@ class TelebotCurrency():
 
         return
 
-    # Проверка корректности ввода пользователя, приведение введенных валют к имени валюты ЦБ
+# Проверка корректности ввода пользователя, приведение введенных валют к имени валюты ЦБ
     @staticmethod
     def normalize(base: str, quote: str) -> tuple[str, str]:
 
@@ -111,6 +111,7 @@ class TelebotCurrency():
 
         return source, target
 
+# Запрос данных о курсах с сервера ЦБ
     @staticmethod
     def request_currency(source: str, target: str) -> tuple[float, float, str, str]:
 

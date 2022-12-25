@@ -23,12 +23,12 @@ if __name__ == "__main__":
         str_ = "*Перечень допустимых команд\:* \n\n"\
 "Общее описание робота el convertore \- /start\n"\
 "Данный список команд \- /help\n"\
-"Список доступных мне валют \- /value\n"\
+"Список доступных мне валют \- /values\n"\
 f"История ваших, {message.chat.first_name}, запросов \- /history\n"
         bot.send_message(message.chat.id, str_, parse_mode='MarkdownV2')
 
 
-    @bot.message_handler(commands=['value'])
+    @bot.message_handler(commands=['values'])
     def handle_start_help(message):
         str_ = "Бот знает следующие валюты\: \n\n"
         for k,v in CURRENCY.items():
