@@ -3,6 +3,7 @@ import redis
 import requests
 import json
 from bs4 import BeautifulSoup
+import time
 
 
 class TBExceptions(Exception):
@@ -25,19 +26,42 @@ class TelebotCurrency():
                 decode_responses=True
             )
 
-# Ведение истории запросов пользователя
-    @staticmethod
-    def logging(logstring):
-        print(logstring)
+    def logging(self, userid: str, logstr: str) -> None:
+
+        dict_ = {}
+        try:
+            if userid in self.red.keys():
+                dict_ = json.loads(self.red.get(userid))
+                dict_[str(time.time())] = logstr
+            else:
+                dict_[str(time.time())] = logstr
+
+            self.red.set(userid, json.dumps(dict_))
+
+        except redis.RedisError:
+            raise TBExceptions(f"Сбой доступа к базе данных\.\n")
+
         return
+
+    def get_history(self, userid: str) -> str:
+        history = ""
+        try:
+            if userid in self.red.keys():
+                dict_ = json.loads(self.red.get(userid))
+                for v in dict_.values():
+                    history = history + "\n" + v
+        except redis.RedisError:
+            raise TBExceptions(f"Нет доступа к истории\.\n")
+
+        if not history:
+            history = "Пустая история запросов."
+
+        return history
 
 # Определение итоговой цены целевой валюты, по текущему и прежнему курсам
     @staticmethod
     def get_price(source: str, target: str, amount: str) -> tuple[float, float, str, str]:
-
         a_rate, p_rate, n_source, n_target = TelebotCurrency.request_currency(source, target)
-        logstring = "тест строка для лога"
-        TelebotCurrency.logging(logstring)
         return round(float(amount) * a_rate, 4), round(float(amount) * p_rate, 4), n_source, n_target
 
 # Проверка корректности ввода пользователя, приведение введенных валют к имени валюты ЦБ

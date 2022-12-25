@@ -9,10 +9,12 @@ if __name__ == "__main__":
     @bot.message_handler(commands=['start'])
     def handle_start_help(message):
         str_ = f"Здравствуйте, *{message.chat.first_name}*\. \n\n"\
-"Я бот \- el convertore валют по текущему курсу\. \n\n Запросите, через пробел: \n *\<исходная валюта\> \<целевая валюта\> \<сумма для обмена\>*\n" \
+"Я бот \- el convertore валют по текущему курсу\. \n\n Запросите, " \
+"через пробел: \n *\<исходная валюта\> \<целевая валюта\> \<сумма для обмена\>*\n" \
 "\nВалюту смотрю по ее коду или названию, мне не важно\. \n\n"\
 "/help для подробного списка команд\. \n\n"\
-"__P\.S\. Но вы можете попробовать прислать мне песню, видео, голосовое сообщение, свое местоположение, али стикер какой\.__"
+"__P\.S\. Но вы можете попробовать прислать мне песню, видео, голосовое сообщение, " \
+"свое местоположение, али стикер какой\.__"
         bot.send_message(message.chat.id, str_, parse_mode='MarkdownV2')
 
 
@@ -36,7 +38,13 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
 
     @bot.message_handler(commands=['history'])
     def handle_start_help(message):
-        bot.send_message(message.chat.id, f"Выводим вашу историю запросов.")
+
+        try:
+            history = tb.get_history(str(message.from_user.id))
+        except TBExceptions as e:
+            bot.send_message(message.chat.id, f"Ошибка запроса истории\.\n{e}", parse_mode='MarkdownV2')
+        else:
+            bot.send_message(message.chat.id, f"История ваших запросов: \n{history}")
 
 
     @bot.message_handler(content_types=['text', ])
@@ -73,6 +81,13 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
 
             str_ = f"При обмене *{amount_}* {n_source} на {n_target} вы получите *{result_}*\." + str_
             bot.send_message(message.chat.id, str_, parse_mode='MarkdownV2')
+
+            str_ = f"{str(time.ctime())} - Запрос расчета {amount} из {source} в {target}. Итого {result}."
+
+            try:
+                tb.logging(str(message.from_user.id), str_)
+            except TBExceptions as e:
+                bot.send_message(message.chat.id, f"Ошибка логирования\.\n{e}", parse_mode='MarkdownV2')
 
 
     @bot.message_handler(content_types=['audio', ])
