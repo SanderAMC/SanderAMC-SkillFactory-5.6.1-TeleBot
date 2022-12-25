@@ -7,7 +7,7 @@ if __name__ == "__main__":
     bot = telebot.TeleBot(tb.tb_token)
 
     @bot.message_handler(commands=['start'])
-    def handle_start_help(message):
+    def handle_start(message):
         str_ = f"Здравствуйте, *{message.chat.first_name}*\. \n\n"\
 "Я бот \- el convertore валют по текущему курсу\. \n\n Запросите, " \
 "через пробел: \n *\<исходная валюта\> \<целевая валюта\> \<сумма для обмена\>*\n" \
@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
 
     @bot.message_handler(commands=['help'])
-    def handle_start_help(message):
+    def handle_help(message):
         str_ = "*Перечень допустимых команд\:* \n\n"\
 "Общее описание робота el convertore \- /start\n"\
 "Данный список команд \- /help\n"\
@@ -29,7 +29,7 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
 
 
     @bot.message_handler(commands=['values'])
-    def handle_start_help(message):
+    def handle_value(message):
         str_ = "Бот знает следующие валюты\: \n\n"
         for k,v in CURRENCY.items():
             str_ = str_ + f"*{k}*  \-  {v} \n"
@@ -37,7 +37,7 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
 
 
     @bot.message_handler(commands=['history'])
-    def handle_start_help(message):
+    def handle_history(message):
 
         try:
             history = tb.get_history(str(message.from_user.id))
@@ -48,7 +48,7 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
 
 
     @bot.message_handler(content_types=['text', ])
-    def say_lmao(message: telebot.types.Message):
+    def text_factory(message: telebot.types.Message):
         try:
             str_ = message.text.split(" ")
 
@@ -91,40 +91,40 @@ f"История ваших, {message.chat.first_name}, запросов \- /his
 
 
     @bot.message_handler(content_types=['audio', ])
-    def say_lmao(message: telebot.types.Message):
+    def audio_factory(message: telebot.types.Message):
         bot.send_message(message.chat.id, 'Сочный звук, мне нра. Хотя ОЙ, ушей-то у меня нет. Вру.')
 
 
     @bot.message_handler(content_types=['photo', ])
-    def say_lmao(message: telebot.types.Message):
+    def photo_factory(message: telebot.types.Message):
         bot.send_message(message.chat.id, 'Для меня картинки все на одну точку, ничего не вижу, глаз-то нет.')
 
 
     @bot.message_handler(content_types=['voice', ])
-    def say_lmao(message: telebot.types.Message):
+    def voice_factory(message: telebot.types.Message):
         bot.send_message(message.chat.id, 'Я робот, мной непостижимы голоса из внешнего мира.')
 
 
     @bot.message_handler(content_types=['video', ])
-    def say_lmao(message: telebot.types.Message):
+    def video_factory(message: telebot.types.Message):
         bot.send_message(message.chat.id, 'Что-то мельтешит такое, но не распознаю. Я-ж не нейросеть, робот простой.')
 
 
     @bot.message_handler(content_types=['document', ])
-    def say_lmao(message: telebot.types.Message):
+    def doc_factory(message: telebot.types.Message):
         bot.send_message(message.chat.id, 'Видать что-то дельное написано. Но мне не понять, я больше по валютам.')
 
 
     @bot.message_handler(content_types=['location', ])
-    def say_lmao(message: telebot.types.Message):
+    def loc_factory(message: telebot.types.Message):
         bot.send_message(message.chat.id, 'Теперь я знаю, где вы находитесь. Но мне это знание бесполезно, уже забыл.')
 
     @bot.message_handler(content_types=['contact', ])
-    def say_lmao(message: telebot.types.Message):
+    def cont_factory(message: telebot.types.Message):
         bot.send_message(message.chat.id, 'Будь у меня мозги, я-б пообщался. Но я не Страшила-Мудрый, мне нечем думать.')
 
     @bot.message_handler(content_types=['sticker'])
-    def say_lmao(message: telebot.types.Message):
+    def stic_factory(message: telebot.types.Message):
         bot.send_sticker(message.chat.id, "CAACAgIAAxkBAAOMY6WAdMw1TO1RLiHv6M807AcmZgsAAh4AA8A2TxOhYFstqwAB3gQsBA")
 
     bot.polling(none_stop=True)
