@@ -6,3 +6,11 @@
 Текущий курс валют берется с сайта ЦБ РФ.
 
 Имя бота: SF_C5.6_Telebot_currency
+
+Обязательно наличие модулей:
+	beautifulsoup4
+	pyTelegramBotAPI
+	redis
+	requests
+	json
+	time
