@@ -1,9 +1,9 @@
-TB_TOKEN = "5832194309:AAGGBEqi0qsYM_1LZ7zVVgSLis1OZS1l9HI"
+TB_TOKEN = "токен бота"
 CURRENCY_BASE = 'https://www.cbr-xml-daily.ru/daily_json.js'
 
-RHOST = 'redis-10330.c250.eu-central-1-1.ec2.cloud.redislabs.com'
+RHOST = 'адрес базы'
 RPORT = 10330
-RPASS = 'yqMyw4PTUdcFTreGjoWLGoweg6BAmrri'
+RPASS = 'ваш пароль'
 
 CURRENCY = {
     "AUD": "адоллар",
